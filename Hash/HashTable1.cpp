@@ -109,7 +109,7 @@ public:
     }
 
 };
-
+//todo 没有实现hash表的自动扩容
 int main() {
     HashTable1 table;
     for (int i = 0; i < 256; i++)
