@@ -30,9 +30,4 @@ int main(){
     producerThread.join();
     consumerThread1.join();
     consumerThread2.join();
-
-
-
-
-
 }
