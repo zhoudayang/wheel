@@ -26,4 +26,4 @@ private:
 };
 
 
-#endif //COUNTDOWNLATCH_COUNTDOWNLATCH_H
+#endif //COUNTDOWNLATCH_H
