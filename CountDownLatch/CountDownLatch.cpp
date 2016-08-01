@@ -23,6 +23,13 @@ void CountDownLatch::countDown() {
     }
 }
 
+//set count__ ++ 
+void CountDownLatch::countUp(){
+    unique_lock<mutex> lock(mutex_);
+    ++count_;
+}
+
+
 int CountDownLatch::getCount() const {
     unique_lock<mutex> lock(mutex_);
     return count_;
