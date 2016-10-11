@@ -76,7 +76,11 @@ public:
             reserve(newSize * 2);
         theSize_ = newSize;
     }
-
+    
+    //clear the vector 
+    void clear(){
+        theSize_ = 0;
+    }
 
     Object &operator[](int index) {
         return objects_[index];
