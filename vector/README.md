@@ -1,6 +1,6 @@
 ## vector simple implement
 
-* simple vector simplement
+* simple vector implement
 * support move semantic 
 * support iterator
 * supply access function with const and non-const version
