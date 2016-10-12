@@ -109,5 +109,8 @@ int main() {
     list.back().print();
     list.front().print();
 
+    list.pop_back();
+    cout<<list.size()<<endl;
+
     return 0;
 }

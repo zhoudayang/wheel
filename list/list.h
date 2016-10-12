@@ -180,6 +180,7 @@ public:
 
     List &operator=(const List &rhs) {
         List copy = rhs;
+        //call move semantic assignment operator function
         std::swap(copy, rhs);
         return *this;
     }
