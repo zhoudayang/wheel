@@ -16,8 +16,6 @@ public:
     void wait();
 
     void countDown();
-    
-    void countUp();
 
     int getCount() const;
 
