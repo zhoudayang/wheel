@@ -45,7 +45,7 @@ public:
         return findMax(root)->element;
     }
 
-    bool containers(const Comparable& x) const
+    bool contains(const Comparable& x) const
     {
         return contains(x, root);
     }

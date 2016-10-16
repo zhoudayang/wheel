@@ -1,84 +1,40 @@
-#include "tree.h"
-
 #include <iostream>
-
+#include "tree.h"
 using namespace std;
-
-class object {
-public:
-    object(int val)
-            :val_(val)
-    {
-       // cout << "object constructor" << endl;
-    }
-
-    object(const object& other)
-            :val_(other.val_)
-    {
-       // cout << "copy constructor" << endl;
-    }
-
-    object(object&& other)
-            :val_(std::move(other.val_))
-    {
-        //cout << "move copy construstor" << endl;
-    }
-
-    bool operator <(const object & other) const{
-        return val_<other.val_;
-    }
-    bool operator >(const object & other) const{
-        return val_ > other.val_;
-    }
-    object& operator=(const object& rhs)
-    {
-        val_ = rhs.val_;
-       // cout<<"normal copy assignment function"<<endl;
-        return *this;
-    }
-
-    object operator =(object &&rhs){
-        val_ = std::move(rhs.val_);
-        //cout<<"copy assignment function with moving semantic";
-        return * this;
-    }
-
-    ~object(){
-       // cout<<"destructor"<<endl;
-    }
-
-
-private:
-    int val_;
-
-    friend std::ostream & operator <<(std::ostream & out,const object & x);
-};
-
-std::ostream & operator <<(std::ostream &out,const object &x){
-    out<<x.val_;
-    return out;
-}
-
-int main()
+// Test program
+int main( )
 {
-    BinarySearchTree<object> tree;
-    for(int i=0;i<1;i++){
-        tree.insert(object(rand()));
+    BinarySearchTree<int> t;
+    int NUMS = 400000;
+    const int GAP  =   3711;
+    int i;
+    cout << "Checking... (no more output means success)" << endl;
+    for( i = GAP; i != 0; i = ( i + GAP ) % NUMS )
+        t.insert( i );
+    for( i = 1; i < NUMS; i+= 2 )
+        t.remove( i );
+    if( NUMS < 40 )
+        t.printTree( );
+    if( t.findMin( ) != 2 || t.findMax( ) != NUMS - 2 )
+        cout << "FindMin or FindMax error!" << endl;
+    for( i = 2; i < NUMS; i+=2 )
+        if( !t.contains( i ) )
+            cout << "Find error1!" << endl;
+    for( i = 1; i < NUMS; i+=2 )
+    {
+        if( t.contains( i ) )
+            cout << "Find error2!" << endl;
     }
-    tree.printTree();
-    tree.makeEmpty();
-
-    for(int i=0;i<100;i++)
-        tree.insert(object(i));
-    tree.remove(0);
-
-    cout<<tree.findMin()<<endl;
-    cout<<tree.findMax()<<endl;
-    tree.insert(101);
-    cout<<tree.findMax()<<endl;
-    auto other = tree ;
-    cout<<other.findMax()<<endl;
-    cout<<other.findMin()<<endl;
-
+    BinarySearchTree<int> t2;
+    t2 = t;
+    for( i = 2; i < NUMS; i+=2 )
+        if( !t2.contains( i ) )
+            cout << "Find error1!" << endl;
+    for( i = 1; i < NUMS; i+=2 )
+    {
+        if( t2.contains( i ) )
+            cout << "Find error2!" << endl;
+    }
+    cout << "Finished testing" << endl;
     return 0;
 }
