@@ -4,6 +4,7 @@
 
 namespace zy
 {
+	//pre define
 	class Condition;
 
 	class Mutex
@@ -33,7 +34,7 @@ namespace zy
 		void operator=(const Mutex &);
 
 	};
-
+		
 	class MutexLockGuard
 	{
 	public:
@@ -52,7 +53,13 @@ namespace zy
 	private:
 		Mutex &mutex_;
 	};
-
+	
+	// the Win32 API offers a dependable condition variable mechanism, but only
+	// starting with
+	// Windows 2008 and Vista
+	// no matter what we will implement our own condition variable with a semaphore
+	// implementation as described in a paper written by Douglas C. Schmidt and
+	// Irfan Pyarali
 	class Condition
 	{
 	public:
