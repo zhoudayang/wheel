@@ -183,11 +183,12 @@ private:
         balance(t);
     }
 
-    //todo
+    //todo : understand it
     void balance(AvlNode*& t)
     {
         if (t==nullptr)
             return;
+        //左子树比右子树高
         if (height(t->left)-height(t->right)>ALLOWED_IMBALANCE)
         {
             if (height(t->left->left)>=height(t->left->right))
@@ -195,6 +196,7 @@ private:
             else
                 doubleWithLeftChild(t);
         }
+            //右子树比左子树高
         else if (height(t->right)-height(t->left)>ALLOWED_IMBALANCE)
         {
             if (height(t->right->right)>=height(t->right->left))
@@ -202,6 +204,7 @@ private:
             else
                 doubleWithRightChild(t);
         }
+        //更新旋转之后树的左右子树高度
         t->height = max(height(t->left), height(t->right))+1;
     }
 
@@ -245,56 +248,72 @@ private:
     }
 
     // 简单的中序遍历
-    void printTree(AvlNode * t) const{
-        if(t!=nullptr){
+    void printTree(AvlNode* t) const
+    {
+        if (t!=nullptr)
+        {
             printTree(t->left);
-            cout<<t->element<<endl;
+            cout << t->element << endl;
             printTree(t->right);
         }
     }
 
     //简单的先序遍历
-    AvlNode * clone(AvlNode * t) const{
-        if(t==nullptr)
+    AvlNode* clone(AvlNode* t) const
+    {
+        if (t==nullptr)
             return nullptr;
         else
-            return new AvlNode(t->element,clone(t->left),clone(t->right));
+            return new AvlNode(t->element, clone(t->left), clone(t->right));
     }
 
-    int height(AvlNode * t) const{
-        return t==nullptr? -1:t->height;
+    int height(AvlNode* t) const
+    {
+        return t==nullptr ? -1 : t->height;
     }
 
-    int max(int lhs,int rhs) const{
-        return lhs>rhs?lhs:rhs;
+    int max(int lhs, int rhs) const
+    {
+        return lhs>rhs ? lhs : rhs;
     }
 
     ///todo: check it
-    void rotateWithLeftChild(AvlNode * & k2){
-        AvlNode * k1 = k2->left;
+    ///see photo 4.43 at p126
+    void rotateWithLeftChild(AvlNode*& k2)
+    {
+        AvlNode* k1 = k2->left;
         k2->left = k1->right;
         k1->right = k2;
-        k2->height = max(height(k2->left),height(k2->right)) +1;
-        k1->height = max(height(k1->left),k2->height) +1;
+        k2->height = max(height(k2->left), height(k2->right))+1;
+        ///now k1 connect to k2 directly
+        k1->height = max(height(k1->left), k2->height)+1;
         k2 = k1;
     }
-
-    void rotateWithRightChild(AvlNode * & k1){
-        AvlNode * k2 = k1->right;
+    ///see photo  4.36 at p120
+    void rotateWithRightChild(AvlNode*& k1)
+    {
+        AvlNode* k2 = k1->right;
         k1->right = k2->left;
         k2->left = k1;
-        k1->height = max(height(k1->left),height(k1->right))+1;
-        k2->height = max(height(k2->right),k1->height)+1;
-        k1=k2;
+        k1->height = max(height(k1->left), height(k1->right))+1;
+        ///now k2 connect to k1 directly
+        k2->height = max(height(k2->right), k1->height)+1;
+        k1 = k2;
     }
-
-    void doubleWithLeftChild(AvlNode * & k3){
+    ///谁高往哪转
+    void doubleWithLeftChild(AvlNode*& k3)
+    {
+        //调整居中的分支，左子树的右半部分超高
         rotateWithRightChild(k3->left);
+        //左边高，调整
         rotateWithLeftChild(k3);
     }
-
-    void doubleWithRightChild(AvlNode * & k1){
+    ///谁高往哪转
+    void doubleWithRightChild(AvlNode*& k1)
+    {
+        //调整居中的分支，右子树的左半部分超高
         rotateWithLeftChild(k1->right);
+        //右边高，调整
         rotateWithRightChild(k1);
     }
 
