@@ -7,5 +7,6 @@
 
 ### 注意事项
 若出现了链接错误，请执行下述操作：
+
 1. 设置vs项目属性，调整预处理器中的预处理器定义，将WINDOWS修改为_CONSOLE。![](http://i.imgur.com/XS5twNr.png)
 2. 转到链接器选项，将系统中的子系统选项调整为控制台(/SUBSYSTEM:CONSOLE)![](http://i.imgur.com/EiwxM4P.png)
