@@ -1,5 +1,6 @@
-#include <boost/weak_ptr.hpp>
 #include "thread.h"
+
+#include <boost/weak_ptr.hpp>
 #include <process.h>
 
 
