@@ -10,9 +10,11 @@ using std::vector;
 //find if a given number is a prime
 bool is_prime(size_t num)
 {
-    if (num<2)
+    if (num==2 || num==3)
+        return true;
+    if (num==1 || num%2==0)
         return false;
-    for (int i = 2; i*i<=num; ++i)
+    for (int i = 3; i*i<=num; i += 2)
     {
         if (num%i==0)
             return false;
@@ -23,8 +25,10 @@ bool is_prime(size_t num)
 //get next prime after num
 size_t nextPrime(size_t num)
 {
-    while (!is_prime(num))
+    if(num%2==0)
         ++num;
+    while (!is_prime(num))
+        num+=2;
     return num;
 }
 

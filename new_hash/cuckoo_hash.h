@@ -48,8 +48,10 @@ public:
     //calculate hash value according to index with value which of given key
     size_t hash(const std::string& x, int which) const
     {
+        //get multiplier
         const int multiplier = MULTIPLIERS[which];
         size_t hashVal = 0;
+        //use multiplier to calculate hash value
         for (auto ch:x)
             hashVal = multiplier*hashVal+ch;
         return hashVal;
@@ -90,6 +92,7 @@ public:
     {
         if (contains(x))
             return false;
+        //达到expand界限
         if (currentSize>=array.size()*MAX_LOAD)
             expand();
         return insertHelper1(x);
@@ -117,8 +120,10 @@ public:
     bool remove(const AnyType& x)
     {
         int currentPos = findPos(x);
+        //find none
         if (!isActive(currentPos))
             return false;
+        //delete it
         array[currentPos].isActive = false;
         return true;
     }
@@ -149,85 +154,104 @@ private:
 
     static const int ALLOWED_REHASHES = 5;
 
-    bool insertHelper1(const AnyType& xx)
+    bool insertHelper1( const AnyType & xx )
     {
         const int COUNT_LIMIT = 100;
         AnyType x = xx;
-        while (true)
-        {
-            int lastPos = -1;
-            int pos;
-            for (int count = 0; count<COUNT_LIMIT; ++count)
-            {
-                for (int i = 0; i<numHashFunctions; i++)
-                {
-                    pos = myhash(x, i);
-                    if (!isActive(pos))
-                    {
-                        array[pos] = std::move(HashEntry{std::move(x), true});
-                        ++currentSize;
-                        return true;
-                    }
-                    int i = 0;
-                    do
-                    {
-                        pos = myhash(x, r.nextInt(numHashFunctions));
-                    }
-                    while (pos==lastPos && i++<5);
-                }
-                lastPos = pos;
-                std::swap(x, array[pos].element);
-            }
-            if (++rehashes>ALLOWED_REHASHES)
-            {
-                expand();
-                rehashes = 0;
-            }
-            else
-                rehash();
-        }
-    }
 
-    bool insertHelper1(AnyType&& x)
-    {
-        const int COUNT_LIMIT = 100;
-        while (true)
+        while( true )
         {
             int lastPos = -1;
             int pos;
-            for (int count = 0; count<COUNT_LIMIT; ++count)
+
+            for( int count = 0; count < COUNT_LIMIT; ++count )
             {
-                for (int i = 0; i<numHashFunctions; ++i)
+                for( int i = 0; i < numHashFunctions; ++i )
                 {
-                    pos = myhash(x, i);
-                    if (!isActive(pos))
+                    pos = myhash( x, i );
+
+                    //get empty pos, insert it
+                    if( !isActive( pos ) )
                     {
-                        array[pos] = std::move(HashEntry{std::move(x), true});
+                        array[ pos ] = std::move( HashEntry{ std::move( x ), true } );
                         ++currentSize;
                         return true;
                     }
                 }
+
+                // None of the spots are available. Kick out random one
+                //　替换任意一个
                 int i = 0;
                 do
                 {
-                    pos = myhash(x, r.nextInt(numHashFunctions));
-                }
-                while (pos==lastPos && i++<5);
+                    pos = myhash( x, r.nextInt( numHashFunctions ) );
+                } while( pos == lastPos && i++ < 5 ); //避免替换到上一次的位置 pos!=lastPos
+
                 lastPos = pos;
-                std::swap(x, array[pos].element);
+                //use pos to store the new element
+                std::swap( x, array[ pos ].element );
+                //now insert array[pos].element
             }
-            if (++rehashes>ALLOWED_REHASHES)
+
+            //一次循环没有达成，直接expand
+            if( ++rehashes > ALLOWED_REHASHES )
             {
-                expand();
-                rehashes;
+                expand( );     // Make the table bigger
+                rehashes = 0;
+            }
+                //每次循环不成，都会进行rehash
+            else
+                rehash( );
+        }
+    }
+
+    bool insertHelper1( AnyType && x )
+    {
+        const int COUNT_LIMIT = 100;
+
+        while( true )
+        {
+            int lastPos = -1;
+            int pos;
+
+            for( int count = 0; count < COUNT_LIMIT; ++count )
+            {
+                for( int i = 0; i < numHashFunctions; ++i )
+                {
+                    pos = myhash( x, i );
+
+                    if( !isActive( pos ) )
+                    {
+                        array[ pos ] = std::move( HashEntry{ std::move( x ), true } );
+                        ++currentSize;
+                        return true;
+                    }
+                }
+
+                // None of the spots are available. Kick out random one
+                int i = 0;
+                do
+                {
+                    pos = myhash( x, r.nextInt( numHashFunctions ) );
+                } while( pos == lastPos && i++ < 5 );
+
+                lastPos = pos;
+                std::swap( x, array[ pos ].element );
+            }
+
+            if( ++rehashes > ALLOWED_REHASHES )
+            {
+                expand( );     // Make the table bigger
+                rehashes = 0;
             }
             else
-                rehash();
+                rehash( );
         }
     }
 
     bool isActive(int currentPos) const
     {
+        //valid pos and hash entry is valid
         return currentPos!=-1 && array[currentPos].isActive;
     }
 
@@ -239,35 +263,42 @@ private:
             if (isActive(pos) && array[pos].element==x)
                 return pos;
         }
+        //try all function, buy find none, return -1
         return -1;
     }
 
     void expand()
     {
+        //expand size of hash table and rehash it
         rehash(static_cast<int>(array.size()/MAX_LOAD));
     }
 
     void rehash()
     {
+        //generate new hash function
         hashFunctions.generateNewFunctions();
+        //rehash to new size
         rehash(array.size());
     }
 
     void rehash(int newSize)
     {
         vector<HashEntry> oldArray = array;
+        ///resize array
         array.resize(nextPrime(newSize));
         for (auto& entry:array)
             entry.isActive = false;
         currentSize = 0;
+        //insert active entry from hash table to new hash table
         for (auto& entry:oldArray)
             if (entry.isActive)
                 insert(std::move(entry.element));
     }
 
+    //调用which 对应的hash　function来计算hash值
     size_t myhash(const AnyType& x, int which) const
     {
-        return hashFunctions.hash(x, which) % array.size();
+        return hashFunctions.hash(x, which)%array.size();
     }
 
 };
