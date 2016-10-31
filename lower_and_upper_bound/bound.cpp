@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::vector;
+
 //lower_bound算法要求在已经按照非递减顺序排序的数组中找到第一个大于等于给定值key的那个数，其基本实现原理是二分查找
 int lower_bound(const vector<int> & arr,int key){
   int half;
