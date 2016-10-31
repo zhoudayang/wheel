@@ -9,7 +9,7 @@
 #include <mutex>
 #include <condition_variable>
 
-class CountDownLatch {
+class CountDownLatch:boost::noncopyable{
 public:
     explicit CountDownLatch(int count);
 
