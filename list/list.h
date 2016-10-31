@@ -112,7 +112,7 @@ public:
             return const_iterator::retriveAsPtr();
         }
 
-        iterator operator++() {
+        iterator& operator++() {
             this->current = this->current->next;
             return *this;
         }
