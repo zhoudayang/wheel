@@ -7,7 +7,7 @@
 
 
 using std::unique_lock;
-
+/* maxQueueSize set the max size of waiting list, if set it as zero, means the max size is unlimited */
 ThreadPool::ThreadPool() :
 	mutex_(),
 	notEmpty_(),
