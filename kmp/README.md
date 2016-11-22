@@ -1,4 +1,4 @@
-## an simple explement for kmp algorithm
+## an simple implement for kmp algorithm
 
 ###  kmp算法理解与记录
 
