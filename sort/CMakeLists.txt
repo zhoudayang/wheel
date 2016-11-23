@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(sort)
-add_definitions(-o2)
+add_definitions(-O2)
 add_definitions(-std=c++11)
 set(SOURCE_FILE
         main.cpp
