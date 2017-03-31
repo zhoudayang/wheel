@@ -40,6 +40,7 @@ void ThreadPool::stop()
 
 	{
 		unique_lock<mutex> lock(mutex_);
+    // set running_ to false
 		running_ = false;
 		notEmpty_.notify_all();
 	}
@@ -55,6 +56,7 @@ size_t ThreadPool::queueSize() const
 	return queue_.size();
 }
 
+// if thread pool size is not empty, put task into queue_
 void ThreadPool::run(const Task && task)
 {
 	if (threads_.empty()) {
@@ -99,9 +101,10 @@ void ThreadPool::runInThread()
 		if (threadInitCallback_) {
 			threadInitCallback_();
 		}
+    // if not running_ now, will not execute the task, just exit silently
 		while (running_) {
 			Task task(take());
-			//if task is valid, run it 
+			//if task is valid, run it
 			if (task) {
 				task();
 			}
@@ -117,7 +120,7 @@ void ThreadPool::runInThread()
 ThreadPool::Task ThreadPool::take()
 {
 	unique_lock<mutex> lock(mutex_);
-	// if not running ,return invalid Task instance 
+	// if not running and queue_ is empty return invalid Task instance
 	while (queue_.empty() && running_) {
 		notEmpty_.wait(lock);
 	}
