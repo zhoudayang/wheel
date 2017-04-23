@@ -84,14 +84,14 @@ int main(int argc, char* const argv[])
     LOG_FATAL << "sigprocmask error: " << strerror(errno);
   }
 
-  // create signalfd care about SIGCHLD sigal only
+  // create signalfd care about SIGCHLD signal only
   int signal_fd = signalfd(-1, &mask, SFD_NONBLOCK | SFD_CLOEXEC);
   if(signal_fd == -1)
   {
     LOG_FATAL << "signalfd error: " << strerror(errno);
   }
 
-  // create epoll_fd, create epoll_fd when exec
+  // create epoll_fd, close epoll_fd when exec
   int epoll_fd = epoll_create1(EPOLL_CLOEXEC);
   if(epoll_fd == -1)
   {
@@ -101,6 +101,7 @@ int main(int argc, char* const argv[])
   struct epoll_event ev;
   ev.events = EPOLLIN;
   ev.data.fd = signal_fd;
+  
   // epoll now care about read events from signalfd
   if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, signal_fd, &ev) == -1)
   {
