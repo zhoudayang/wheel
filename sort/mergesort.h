@@ -1,38 +1,45 @@
-#ifndef MERGESORT_H
-#define MERGESORT_H
+#pragma once
+#include <vector>
 
-void mergesort(int a[], int l, int r) {
-    //if l >= r, return at once, this is the minimum problem, cannot split again
-    if (l >= r)
-        return;
-    //divide problem by half
-    int middle = (l + r) >> 1;
-    //sort left half
-    mergesort(a, l, middle);
-    //sort right half
-    mergesort(a, middle + 1, r);
-    //init temporary array
-    int *temp = new int[r + 1];
-    //copy left half of the array directly
-    for (int i = 0; i <= middle; ++i)
-        temp[i] = a[i];
-    int cur = middle + 1;
-    //copy right half of the array from end to begin
-    for (int i = r; i > middle; --i)
-        temp[cur++] = a[i];
-    //merge two array
-    for (int i = l, j = r, k = l; k <= r; ++k)
+inline void merge(int a[], int p, int mid, int q)
+{
+  int size = q - p + 1;
+  std::vector<int> arrs;
+  arrs.reserve(size);
+  for(int i = p; i <= mid; ++i)
+  {
+    arrs.push_back(a[i]);
+  }
+  for(int i = q; i > mid; --i)
+  {
+    arrs.push_back(a[i]);
+  }
+
+  for(int i = 0, j = size - 1, k = p; k <= q; ++k)
+  {
+    if(arrs[i] < arrs[j])
     {
-        if (temp[i] < temp[j])
-            a[k] = temp[i++];
-        else
-            a[k] = temp[j--];
+      a[k] = arrs[i++];
     }
+    else
+    {
+      a[k] = arrs[j--];
+    }
+  }
 }
 
-void mergesort(int a[], int n) {
-    mergesort(a, 0, n - 1);
+void mergesort(int a[], int p, int q)
+{
+  if(p >= q)
+    return;
+  int mid = p + q;
+  mid >>= 1;
+  mergesort(a, p, mid);
+  mergesort(a, mid + 1, q);
+  merge(a, p, mid, q);
 }
 
+inline void mergesort(int a[], int n) {
+  mergesort(a, 0, n - 1);
+}
 
-#endif
