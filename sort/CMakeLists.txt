@@ -8,3 +8,5 @@ set(SOURCE_FILE
         qsort.h
         )
 add_executable(sort ${SOURCE_FILE})
+
+add_executable(qsort_non_recursive qsort_non_recursive.cc)
