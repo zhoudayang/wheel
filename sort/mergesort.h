@@ -28,6 +28,25 @@ inline void merge(int a[], int p, int mid, int q)
   }
 }
 
+// no vector used
+inline void merge1(int a[], int l, int mid, int r)
+{
+  int arrs[r+1];
+  for(int i = l; i <= mid; ++i)
+    arrs[i] = a[i];
+  for(int i = r, j = mid + 1; i > mid; --i)
+    arrs[j++] = a[i];
+  for(int i = l, j = r, k = l; k <= r; ++ k)
+  {
+    if(arrs[i] < arrs[j])
+    {
+      a[k] = arrs[i++];
+    }
+    else
+      a[k] = arrs[j--];
+  }
+}
+
 void mergesort(int a[], int p, int q)
 {
   if(p >= q)
