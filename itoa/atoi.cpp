@@ -4,49 +4,71 @@
 
 #include <iostream>
 #include <string>
+#include <limits.h>
 
 using namespace std;
 
 //key idea
-//使用 unsigned int 存放中间结果，并且注意负数的溢出问题
-int atoi(const char *digits) {
-    if (!digits)
-        return 0;
-    while (isspace(*digits))
-        digits++;
-    int sign = 1;
-    if (*digits == '+')
-        digits++;
-    else if (*digits == '-')
+//使用 unsigned int 存放中间结果，并且注意溢出问题
+int atoi(const char *digits)
+{
+  unsigned int n = 0;
+  if (!digits)
+  {
+    return 0;
+  }
+  while (isspace(*digits))
+  {
+    ++digits;
+  }
+  int sign = 1;
+  if (*digits == '+' || *digits == '-')
+  {
+    if (*digits == '-')
     {
-        sign = -1;
-        digits++;
+      sign = -1;
     }
-    long result = 0;
-    while (isdigit(*digits))
+    ++digits;
+  }
+  while (isdigit(*digits))
+  {
+    int c = *digits - '0';
+    if (sign > 0 && (n > INT_MAX / 10 || (n == INT_MAX / 10 && c > INT_MAX % 10)))
     {
-        result = 10 * result + *digits++ - '0';
+      n = INT_MAX;
+      break;
     }
-    return sign * result;
+    else if (sign < 0 && (n > static_cast<unsigned>(INT_MAX) / 10
+        || (n == static_cast<unsigned>(INT_MIN) / 10 && c > static_cast<unsigned>(INT_MIN) % 10)))
+    {
+      n = INT_MIN;
+      break;
+    }
+    n = n * 10 + c;
+    ++digits;
+  }
+  return sign > 0 ? n : -n;
 }
 
-int main() {
-    const char *max_str = to_string(INT_MAX).c_str();
-    const char *min_str = to_string(INT_MIN).c_str();
-    cout << max_str << " : " << atoi(max_str) << endl;
-    cout << min_str << " : " << atoi(min_str) << endl;
+int main()
+{
+  auto max_str = to_string(INT_MAX);
+  auto min_str = to_string(INT_MIN);
+  cout << max_str << " : " << atoi(max_str.c_str()) << endl;
+  cout << min_str << " : " << atoi(min_str.c_str()) << endl;
 
-    for (int i = 0; i < 1000; ++i)
-    {
-        int value = rand();
-        int negative_value = -value;
-        const char *value_str = to_string(value).c_str();
-        const char *negative_str = to_string(negative_value).c_str();
-        cout << value << " : " << atoi(value_str) << endl;
-        cout << negative_value << " : " << atoi(negative_str) << endl;
-    }
+  for (int i = 0; i < 1000; ++i)
+  {
+    int value = rand();
+    int negative_value = -value;
+    auto value_str = to_string(value);
+    auto negative_str = to_string(negative_value);
+    cout << value << " : " << atoi(value_str.c_str()) << endl;
+    cout << negative_value << " : " << atoi(negative_str.c_str()) << endl;
+  }
 
-    return 0;
+  cout << "787878787878787878 : " << atoi("787878787878787878") << endl;
+  cout << "-787878787878787878 : " << atoi("-787878787878787878") << endl;
 
-
+  return 0;
 }

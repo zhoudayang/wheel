@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <limits.h>
 
 using std::cout;
 using std::endl;
