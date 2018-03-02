@@ -17,6 +17,7 @@ int partition(vector<int>& arr, int l, int r, int pivot)
   return l;
 }
 
+/// 要点，将参数保存到堆栈之中，利用堆栈模拟递归函数
 void qsort(vector<int>& arr, int l, int r)
 {
   stack<int> st;
