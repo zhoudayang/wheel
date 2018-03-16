@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.5)
+
+add_executable(pipe1 pipe1.cc)
+add_executable(pipe_client pipe_client.cc)
+add_executable(pipe_server pipe_server.cc)
+add_executable(msg_receiver msg_receiver.cc)
+add_executable(msg_sender msg_sender.cc)
+add_executable(semaphore semaphore.cc)
+add_executable(shm_receiver shm_receiver.cc)
+add_executable(shm_sender shm_sender.cc)
+target_link_libraries(shm_receiver pthread)
+target_link_libraries(shm_sender pthread)
