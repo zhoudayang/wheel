@@ -31,7 +31,7 @@ int main()
 
   while (running)
   {
-    if (msgrcv(msgid, (void *) &data, BUFSIZ, msgtype, 0) == -1)
+    if (msgrcv(msgid, (void *) &data, sizeof(struct msg_st), msgtype, 0) == -1)
     {
       fprintf(stderr, "msgrcv failed with errno: %d\n", errno);
       exit(-1);
