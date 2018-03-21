@@ -32,7 +32,7 @@ int main()
     fgets(buffer, BUFSIZ, stdin);
     data.msg_type = 1;
     strcpy(data.text, buffer);
-    if (msgsnd(msgid, (void *) &data, BUF_SIZE, 0) == -1)
+    if (msgsnd(msgid, (void *) &data, sizeof(struct msg_st), 0) == -1)
     {
       fprintf(stderr, "msgsnd failed\n");
       exit(-1);
